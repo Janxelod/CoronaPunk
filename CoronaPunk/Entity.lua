@@ -7,15 +7,16 @@
 --
 
 local scene=scene
-local GlobalFunctions=require("GlobalFunctions")
+local GlobalFunctions=require("CoronaPunk.GlobalFunctions")
 
-require("table_AS3")
+require("CoronaPunk.table_AS3")
 _G.require("Base.Class")
 local Entity=Class()
 
 function Entity:initialize(x,y,image)
     if(x==nil)then x=0 end
     if(y==nil)then y=0 end
+    self.active=true
     self.visible=true
     self.collidable=true
     self.x=x

@@ -5,3 +5,7 @@
 -- Time: 03:00 PM
 -- To change this template use File | Settings | File Templates.
 --
+
+local Input={}
+
+return Input

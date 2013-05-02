@@ -7,7 +7,7 @@
 --
 
 local scene=scene
-require("table_AS3")
+require("CoronaPunk.table_AS3")
 _G.require("Base.Class")
 local World=Class()
 
@@ -24,7 +24,8 @@ function World:initialize(...)
     --Render Information
     self._typeFirst={}
     self._typeCount={}
-    self_.entityName={}
+    self._entityName={}
+    self.active=true
 end
 
 --[[
@@ -46,6 +47,7 @@ function World:update()
    while(e~=nil)do
        if(e.active==true)then
            e:update()
+
        end
        --Podria ir codigo para actualizar grupo de entidades
        e=e._updateNext
@@ -53,7 +55,7 @@ function World:update()
 end
 
 function World:add(e)
-    self._add[#self._add]=e
+    self._add[#self._add+1]=e
     return e
 end
 
@@ -182,14 +184,16 @@ function World:updateLists()
                 if(e._name~="")then self:unregisterName(e) end
             end
         end
-        remove={}
+        self._remove={}
     end
     --add entities
     if(#add>0)then
+
         for i,e in ipairs(add)do
             if(e._world~=nil)then
                 --continue statement
             else
+	            print("Agrego nueva entidad"..#add)
                 self:addUpdate(e)
                 if(e._type~="")then self:addType(e) end
                 if(e._type~="")then self:registerName(e) end
@@ -197,7 +201,7 @@ function World:updateLists()
                 e:added()
             end
         end
-        add={}
+	    self._add={}
     end
 end
 
@@ -210,13 +214,13 @@ function World:addUpdate(e)
         e._updateNext=nil
     end
     e._updatePrev=nil
-    updateFirst=e
+    self._updateFirst=e
     self._count=self._count+1
 end
 
 function World:removeUpdate(e)
     local updateFirst=self._updateFirst
-    if(updateFirst==e)then updateFirst=e._updateNext end
+    if(updateFirst==e)then self._updateFirst=e._updateNext end
     if(e._updateNext~=nil)then e._updateNext._updatePrev=e._updatePrev end
     if(e._updatePrev~=nil)then e._updatePrev._updateNext=e._updateNext end
     e._updateNext,e._updatePrev=nil,nil
@@ -225,17 +229,17 @@ function World:removeUpdate(e)
 end
 
 function World:addType(e)
-    local typeFirst,typeCount=self._typeFirst,self._typeCount
+    local typeFirst=self._typeFirst
     if(typeFirst[e._type]~=nil)then
-        typeFirst[e._type]._typePrev=e
-        e._typeNext=typeFirst[e._type]
-        typeCount[e._type]=typeCount[e._type]+1
+	    self._typeFirst[e._type]._typePrev=e
+        e._typeNext=self._typeFirst[e._type]
+	    self._typeCount[e._type]=self._typeCount[e._type]+1
     else
        e._typeNext=nil
-       typeCount[e._type]=1
+       self._typeCount[e._type]=1
     end
     e._typePrev=nil
-    typeFirst[e._type]=e
+    self._typeFirst[e._type]=e
 end
 
 function World:removeType(e)

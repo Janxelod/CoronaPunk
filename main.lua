@@ -6,19 +6,14 @@
 -- To change this template use File | Settings | File Templates.
 --
 
-require("physics")
-physics.start()
+local Engine=require("CoronaPunk.Engine")
+local display=require("display")
+local CP=require("CoronaPunk.CP")
+local Megaman=require("Megaman")
 
-local circle=display.newRect(10,10,10,10)
+local engine=Engine:new(display.contentWidth,display.contentHeight,60)
 
-physics.addBody(circle,"dynamic")
-local i=1
-local function rungame(evt)
-    if(i<50)then
+local player=Megaman:new(200,300,"megaman.png")
 
-        physics.addBody(display.newRect(3+i*5,10,10,10),"dynamic")
-    end
-    i=i+1
-end
+CP._WORLD:add(player)
 
-Runtime:addEventListener("enterFrame",rungame)

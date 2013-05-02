@@ -6,7 +6,7 @@
 -- To change this template use File | Settings | File Templates.
 --
 
-require("table_AS3")
+require("CoronaPunk.table_AS3")
 
 local scene=scene
 
@@ -197,3 +197,4 @@ function CP:frames(from,to,skip)
     return a
 end
 
+return CP
